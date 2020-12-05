@@ -1,11 +1,12 @@
-with open("day4_input.txt") as f:
+with open("test.txt") as f:
 	a = f.read()
-	a = a.rstrip("\n")
+	a = a.strip()
 	b = a.split("\n\n")
+	print(b)
 	#lines = [line.rstrip() for line in f]
 b = [x.replace("\n"," ") for x in b]
 #print(a)
-#print(b)
+print(b)
 #print(lines)
 fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 num_valid_passports = 0
@@ -69,5 +70,5 @@ def dataValidation(passport_dict):
 
 	return True
 
-result = passportProcessing(b, fields, num_valid_passports)
-print(result)
+#result = passportProcessing(b, fields, num_valid_passports)
+#print(result)
