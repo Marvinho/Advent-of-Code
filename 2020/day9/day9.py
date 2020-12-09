@@ -25,16 +25,16 @@ inv_number = part1(lines, preambel_len=25)
 def part2(lines, inv_number):
 	i = 0
 	while(i < len(lines)):
-		result = 0
+		target = 0
 		j = 1
-		while(inv_number >  result):
-			result = sum(lines[i:j])
-			if(result == inv_number):
+		while(inv_number >  target):
+			target = sum(lines[i:j])
+			if(target == inv_number):
 				print("INV NUMBER", lines[i:j])
 				enc_weakness = min(lines[i:j]) + max(lines[i:j])
 				print("RESULT:" ,min(lines[i:j]) + max(lines[i:j]))
 				return enc_weakness
 			j+=1
-		print(result)
+		#print(target)
 		i+=1
 part2(lines, inv_number)
