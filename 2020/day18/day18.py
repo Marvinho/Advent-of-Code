@@ -1,7 +1,7 @@
-# import numpy as np
-# with open("test.txt") as f:
-# 	lines = [line.rstrip().replace(" ", "") for line in f]
-#print(lines)
+import numpy as np
+with open("test.txt") as f:
+	lines = [line.rstrip().replace(" ", "") for line in f]
+# print(lines)
 
 # def part1(lines):
 # 	for line in lines[:1]:
@@ -25,52 +25,29 @@
 # 			i+=1
 # 			print(arr)
 
-# a = lines[0]
-# a = [i for i in a]
-# def reduce(eq):
-# 	if(len(eq) == 1):
-# 		return eq[0]
-# 	while(len(eq) > 1):
-
-# 		arr = []
-# 		c = eq.pop(0) 
-# 		elif(c in "0123456789+*"):
-# 			arr.append(c)
+a = lines[0]
+a = [i for i in a]
+# def reduce(i, eq):
+# 	arr = []
+# 	while(i < len(eq)):
+# 		if(eq[i] in "0123456789+*"):
+# 			arr.append(eq[i])
+# 			i+=1
 # 		elif(c in "("):
-# 			reduce(eq)
+# 			i, x = reduce(i+1, eq)
+# 			arr.append(x)
 # 		elif(c in ")"):
-# 			return arr
 
-# reduce(a)		
-
-class T:
-    def __init__(self, v):
-        self.v = v
-    def __add__(self, other):
-        return T(self.v + other.v)
-    def __sub__(self, other):
-        return T(self.v * other.v)
-    def __mul__(self, other):
-        return T(self.v + other.v)
-
-def main():
-    part2 = True
-    with open("day18.txt") as f:
-        inp = f.read()
-    # with open("example_input.txt") as f:
-    #     inp = f.read()
-
-    lines = [line for line in inp.split("\n") if line]
-    t = 0
-    for line in lines:
-        for d in range(10):
-            line = line.replace(f"{d}", f"T({d})")
-        line = line.replace("*", "-")
-        if part2:
-            line = line.replace("+", "*")
-        t += eval(line, {"T": T}).v
-    print(t)
-
-if __name__ == '__main__':
-    main()
-
+# 		i+=1
+def solve(a):
+	d = {0:[],1:[],2:[],3:[]}
+	level = 0
+	for i in a:
+		if(i in "1234567890+*"):
+			d[level].append(i)
+		if(i in "("):
+			level+= 1
+		if(i in ")"):
+			level-=1
+	print(d)
+solve(a)
