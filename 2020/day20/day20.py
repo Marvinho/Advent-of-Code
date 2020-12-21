@@ -25,7 +25,7 @@ for tile in tiles:
 
 	else:
 		tile_d[tile_id] = (top, bottom, left, right, 
-							top[::-1], bottom[::-1], left[::-1], right[::-1])
+						top[::-1], bottom[::-1], left[::-1], right[::-1])
 print(tile_d)
 
 for key, value in tile_d.items():
