@@ -9,6 +9,7 @@ def determine_loopsize(key):
 	subject_number = 7
 	value = 1
 	i = 1
+	iterations = 100
 	while(True):
 		value *= subject_number
 		value = value % 20201227
