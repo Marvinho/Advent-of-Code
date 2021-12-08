@@ -1,4 +1,4 @@
-with open("testday08.txt") as f:
+with open("day08.txt") as f:
 	pattern_lst = []
 	digit_output_lst = []
 	for line in f:
@@ -23,6 +23,7 @@ def easy_digits(pattern_lst, digit_output_lst):
 	return count
 # easy_digits(pattern_lst, digit_output_lst)
 def calc_output_value(outputs, pattern_digit_map):
+	print(pattern_digit_map)
 	output_str = ""
 	for digit_str in outputs:
 		# print(digit_str)
@@ -35,10 +36,11 @@ def calc_output_value(outputs, pattern_digit_map):
 
 
 def determine_digits(pattern_lst, digit_output_lst):
+	output_lst = []
 	whole_lst = [a + b for a, b in zip(pattern_lst, digit_output_lst)]
-	print(whole_lst)
-	pattern_digit_map = {-6:[], -5:[]}
+	# print(whole_lst)
 	for digits in whole_lst:
+		pattern_digit_map = {-6:[], -5:[]}
 		for digit in digits:
 			match len(digit):
 				case 2:
@@ -54,9 +56,9 @@ def determine_digits(pattern_lst, digit_output_lst):
 				case 7:
 					pattern_digit_map[8]= set(digit)
 		for i in pattern_digit_map[-6]:
-			if(i & pattern_digit_map[4] == i):
+			if((i & pattern_digit_map[4]) == pattern_digit_map[4]):
 				pattern_digit_map[9] = i
-			if(len(i & pattern_digit_map[1]) == 2):
+			if(len(i & pattern_digit_map[1]) == 2 and len(i & pattern_digit_map[4]) == 3):
 				pattern_digit_map[0] = i
 			if(len(i & pattern_digit_map[1]) == 1):
 				pattern_digit_map[6] = i
@@ -69,12 +71,12 @@ def determine_digits(pattern_lst, digit_output_lst):
 				pattern_digit_map[2] = i
 		del pattern_digit_map[-6]
 		del pattern_digit_map[-5]
-		print(pattern_digit_map)
-		print(digits[-4:])
-		output_lst = []
+		# print(pattern_digit_map)
+		# print(digits[-4:])
+		
 		output_lst.append(calc_output_value(digits[-4:], pattern_digit_map))
-		print(sum(output_lst))
-
+		print(output_lst)
+	print(sum(output_lst))
 def calc_score():
 	pass
 determine_digits(pattern_lst, digit_output_lst)
