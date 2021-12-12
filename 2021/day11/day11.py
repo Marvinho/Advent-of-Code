@@ -44,8 +44,11 @@ def flashing(energy_levels, flash_counter):
 
 if __name__=="__main__":
 	flash_counter = 0
-	for i in range(1, 101):
+	for i in range(1, 1101):
 		energy_levels, flash_counter = flashing(energy_levels, flash_counter)
+		if(np.all(energy_levels == energy_levels[0])):
+			print("All values equal step",i,energy_levels)
+			break
 		if(i%10 == 0):
 			print("After step ", i, energy_levels)
 			print(flash_counter)
