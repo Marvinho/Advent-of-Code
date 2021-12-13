@@ -43,10 +43,21 @@ def fold(dot_arr, fold_instructions, n=1):
 			dot_arr = dot_arr[:, :fold_line-1]
 			# print(dot_arr)
 			dot_arr = np.add(dot_arr, half)
-			print(dot_arr)			
-		print(dot_arr[dot_arr >= 1]="#")
-
+			print(dot_arr)
+	dot_arr[dot_arr >= 1]="1"				
+	print(dot_arr)
+	return dot_arr
 		# print(np.sum(dot_arr))
 
 
-fold(dot_arr, fold_instructions, len(fold_instructions))
+dot_arr = fold(dot_arr, fold_instructions, len(fold_instructions))
+import seaborn as sns; sns.set()
+import matplotlib.pyplot as plt
+
+ax = sns.heatmap(dot_arr, annot=True, fmt="d")
+
+plt.title("How to visualize (plot) \n a numpy array in python using seaborn ?",fontsize=12)
+
+plt.savefig("visualize_numpy_array_01.png", bbox_inches='tight', dpi=100)
+
+plt.show()
