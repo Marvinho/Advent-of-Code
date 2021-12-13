@@ -1,44 +1,41 @@
-with open("testday12-0.txt") as f:
-	paths = {}
+import networkx as nx
+from collections import Counter
+G = nx.Graph()
+with open("day12.txt") as f:
+	
 	caves = {}
+	small_caves = {}
 	for c in f:
 		c = c.strip().split("-")
 		# print(c)
-		caves[c[0]] = c[0].isupper()
-		caves[c[1]] = c[1].isupper()
-		if(c[0] not in paths):
-			paths[c[0]] = {c[1]}
-		else:
-			paths[c[0]].add(c[1])
-		if(c[1] not in paths):
-			paths[c[1]] = {c[0]}
-		else:
-			paths[c[1]].add(c[0])
-print(caves, paths)
+		G.add_edge(*c)
 
-def find_paths(paths, caves):
-	paths_list = []
-	for value in paths["start"]:
-		paths_list.append(["start", value])
-	print(paths_list)
-	new_paths_list = paths_list[:]
-	flag=True
-	while(flag):
-		flag=False
-		paths_list = new_paths_list[:]
-		new_paths_list = []
-		for path in paths_list:
-			for value in paths[path[-1]]:
-				if((value not in path[:-1] or caves[value]==True) and path[-1]!="end"):
-					new_paths_list.append(path+[value])
-					flag=True
-				elif(path[-1]=="end" and path not in new_paths_list):
-					new_paths_list.append(path)
-					# print(value, path)
-					# new_paths_list.append(path)
-		print(new_paths_list)
-		# print(flag)
-		print(len(new_paths_list))
-
-
-find_paths(paths, caves)
+# print(G.nodes)
+# print(G.edges)
+stack = [["start"]]
+def find_paths(last_node):
+	score = 0
+	while(stack):
+		# print(stack)
+		path = stack.pop(0)
+		# print(path)
+		# print("neighbors", list(G.neighbors(path[-1])))
+		for node in G.neighbors(path[-1]):
+			if(node == "end"):
+				score+=1
+			elif(node =="start"):
+				continue
+			elif(node.isupper()):
+				stack.append(path+[node])
+			elif(node not in path):
+				stack.append(path+[node])
+			elif(node.islower() and node in path):
+				asdf = Counter(path)
+				rep_list = []
+				for k in asdf:
+					if(k.islower()):
+						rep_list.append(asdf[k])
+				if(all(i < 2 for i in rep_list)):
+					stack.append(path+[node])
+	print(score)
+find_paths(stack)
