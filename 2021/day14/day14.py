@@ -1,7 +1,7 @@
 import re
 import timeit
 from collections import Counter
-with open("testday14.txt") as f: 
+with open("day14.txt") as f: 
 	rules = {}
 	for line in f:
 		line = line.strip()
@@ -19,39 +19,51 @@ print(polymer, rules)
 
 def insert(polymer, rules, num=40):
 	print(polymer, rules)
-	
+	freq_of_bigrams = {}
+	for key in rules.keys():
+		freq_of_bigrams[key] = 0
+	for i in range(len(polymer[:-1])):
+		bigram = polymer[i]+polymer[i+1]
+		if(bigram in freq_of_bigrams):
+			freq_of_bigrams[bigram] +=1
+	print(freq_of_bigrams)
+	for i in range(1, num+1):		
+		new_freq_of_bigrams = freq_of_bigrams.copy()
+		for rule, insertion in rules.items():
+			if(freq_of_bigrams[rule] > 0):
+				freq = freq_of_bigrams[rule]
+				bigram1 = rule[0]+insertion
+				bigram2 = insertion+rule[1]
+				new_freq_of_bigrams[bigram1] += freq
+				new_freq_of_bigrams[bigram2] += freq
+				new_freq_of_bigrams[rule] -= freq
+		# print(new_freq_of_bigrams)
+		print("step", i, sum(new_freq_of_bigrams.values())+1)
+		freq_of_bigrams = new_freq_of_bigrams
+	return freq_of_bigrams
 
-	for i in range(num):		
-		start = timeit.default_timer()
-		inserts = [None]*len(polymer)
-		for key, value in rules.items():
-			if(key in polymer):
-				asdf = [match.start()+1 for match in re.finditer('(?={})'.format(key), polymer)]
-				for a in asdf:
-					inserts[a] = value
-		
-		poly_arr = list(polymer)
-		stop = timeit.default_timer()
-
-		print('1Time: ', stop - start) 
-		for pos, ins in enumerate(inserts[::-1]):
-			if(ins is None):
-				continue
-			else:
-				at = len(inserts)-pos-1
-				poly_arr[at:at] = ins 
-		stop = timeit.default_timer()
-		print('2Time: ', stop - start) 
-		# print(poly_arr)
-		polymer = "".join(poly_arr)
-		cnter = Counter(polymer)
-		score = max(cnter.values())-min(cnter.values())
-		# print(score)
-		stop = timeit.default_timer()
-		print('3Time: ', stop - start) 
+def calc_score(polymer, freq_of_bigrams):
+	occurrences = {polymer[0]:1, polymer[-1]:1}
+	for key, value in freq_of_bigrams.items():
+		element1 = key[0]
+		element2 = key[1]
+		if(element1 not in occurrences):
+			occurrences[element1] = value/2
+		else:
+		 	occurrences[element1] += value/2
+		if(element2 not in occurrences):
+			occurrences[element2] = value/2
+		else:
+		 	occurrences[element2] += value/2
+	occurrences[polymer[0]]-=0.5
+	occurrences[polymer[-1]]-=0.5
+	print(occurrences)
+	return max(occurrences.values()) - min(occurrences.values())
 #############################################################
 #represent string as frequencies of bigrams??????????
 #############################################################
 
 if __name__ == '__main__':
-	insert(polymer, rules)
+	freq_of_bigrams = insert(polymer, rules)
+	score = calc_score(polymer,freq_of_bigrams)
+	print(score)
