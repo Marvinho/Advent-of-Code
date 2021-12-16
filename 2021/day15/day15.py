@@ -14,10 +14,19 @@ leny, lenx = risk_levels.shape[0], risk_levels.shape[1]
 openlist = {(0, 0): (0, 20, 0)}
 closedlist = {}
 
-##########################################################
-# Baue graph und finde besten path
-# A*
-##########################################################
+def part2(risk_levels):
+	new_risk_levels = np.copy(risk_levels)
+	# print(new_risk_levels, risk_levels)
+	for j in range(1,5):
+		new_risk_levels = np.concatenate((new_risk_levels, risk_levels+j), axis=0)
+		# new_risk_levels[new_risk_levels  10] = 1
+	new_risk_levels1 = np.copy(new_risk_levels)
+	for i in range(1,5):
+		new_risk_levels1 = np.concatenate((new_risk_levels1, new_risk_levels+i), axis=1)
+	new_risk_levels1[new_risk_levels1 >= 10] = -9 + new_risk_levels1[new_risk_levels1 >= 10]
+	# print(new_risk_levels1)
+	return new_risk_levels1
+
 
 def astar(risk_levels):
 	# print(risk_levels, openlist)
@@ -55,7 +64,7 @@ def expandNode(currentNode):
 		if(s in closedlist):
 			continue
 		childg = closedlist[currentNode][0] + risk_levels[s[0]][s[1]]
-		print(s, childg)
+		# print(s)
 		childh = -2+risk_levels.shape[0] +risk_levels.shape[1] - s[0]-s[1]
 		childf = childh+childg
 		# print(childg, childh, childf)
@@ -67,10 +76,12 @@ def expandNode(currentNode):
 				continue
 
 		# print(openlist)
-		print(risk_levels[s[0]][s[1]])
+		# print(risk_levels[s[0]][s[1]])
 		openlist[s] = (childg, childh, childf)
 
 	# successors = 
 if __name__=="__main__":
+	risk_levels = part2(risk_levels)
+	print(risk_levels.shape)
 	astar(risk_levels)
 	# print(a, b)
