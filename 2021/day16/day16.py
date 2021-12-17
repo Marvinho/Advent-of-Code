@@ -1,4 +1,4 @@
-with open("day16.txt") as f:
+with open("testday16-2.txt") as f:
 	arr = []
 	for line in f:
 		arr.append(line.strip())
@@ -6,9 +6,11 @@ with open("day16.txt") as f:
 
 global version_score
 version_score = 0
+
 def decode(bitstr, parse_idx=0):
+	numberstr = []
 	global version_score
-	if(len(bitstr)<11):
+	if(len(bitstr)<6):
 		print(version_score)
 		exit()
 	vers = bitstr[:3]
@@ -21,71 +23,109 @@ def decode(bitstr, parse_idx=0):
 	print("Version: {}, Typeid: {}".format(vers, typeid))
 	bitstr = bitstr[6:]
 	if(typeid == 4):
-		bitstr, numberstr, add_idx = literal_value(bitstr)
+		bitstr, numberstr, add_idx = literal_value(bitstr, numberstr)
 		parse_idx+= add_idx
-		print("RETURNING", bitstr, numberstr, parse_idx)
 		return bitstr, numberstr, parse_idx
-	else:
-		bitstr, numberstr, parse_idx = operator(bitstr)
+	elif(typeid==0):
+		bitstr, num, parse_idx = operator(bitstr, numberstr)
+		numberstr = num
+		numberstr = [sum(numberstr)]
+		print("sum",numberstr)
 		return bitstr, numberstr, parse_idx
-
-def operator(bitstr):
+	elif(typeid==1):
+		bitstr, num, parse_idx = operator(bitstr, numberstr)
+		numberstr = num
+		result = 1
+		for x in numberstr:
+			result = result*x
+		
+		numberstr = [result]
+		print("mult",numberstr)
+		print(bitstr, numberstr, parse_idx)
+		return bitstr, numberstr, parse_idx
+	elif(typeid==2):
+		bitstr, numberstr, parse_idx = operator(bitstr, numberstr)
+		numberstr = [min(numberstr)]
+		print("min",numberstr)
+		return bitstr, numberstr, parse_idx	
+	elif(typeid==3):
+		bitstr, numberstr, parse_idx = operator(bitstr, numberstr)
+		numberstr = [max(numberstr)]
+		print("max",numberstr)
+		return bitstr, numberstr, parse_idx	
+	elif(typeid==5):
+		bitstr, numberstr, parse_idx = operator(bitstr, numberstr)
+		if(numberstr[0] > numberstr[1]):
+			numberstr = [1]
+		else:
+			numberstr = [0]
+		print("greaterthan",numberstr)
+		return bitstr, numberstr, parse_idx	
+	elif(typeid==6):
+		bitstr, numberstr, parse_idx = operator(bitstr, numberstr)
+		if(numberstr[0] < numberstr[1]):
+			numberstr = [1]
+		else:
+			numberstr = [0]
+		print("lessthan",numberstr)
+		return bitstr, numberstr, parse_idx
+	elif(typeid==7):
+		bitstr, numberstr, parse_idx = operator(bitstr, numberstr)
+		print(bitstr, numberstr, parse_idx)
+		print("equal",numberstr)
+		if(numberstr[0] == numberstr[1]):
+			numberstr = [1]
+		else:
+			numberstr = [0]
+		# print("WWWWWWWWWWWWWWWWWWW",numberstr)
+		return bitstr, numberstr, parse_idx
+	# else:
+		# bitstr, numberstr, parse_idx = operator(bitstr, numberstr)
+		# return bitstr, numberstr, parse_idx
+def operator(bitstr, numberstr):
 	# print(bitstr)
 	lentype_id = bitstr[0]
 	bitstr = bitstr[1:]
-	print("lentype", lentype_id)
+	# print("lentype", lentype_id)
 	parse_idx = 0
 	if(lentype_id == "0"):
 		shiftby = 15
 		len_of_subpackets_in_bits = bitstr[:shiftby]
 		len_of_subpackets_in_bits = int(len_of_subpackets_in_bits, 2)
-		print("len_of_subpackets_in_bits", len_of_subpackets_in_bits)
-		print(bitstr[shiftby:])
-		bitstr = bitstr[shiftby:]
-		
+		bitstr = bitstr[shiftby:]		
 		while(parse_idx < len_of_subpackets_in_bits):
-			print(bitstr, parse_idx)
-			# bitstr = bitstr[parse_idx:]
-			# print(bitstr)
-			bitstr, numberstr, add_idx = decode(bitstr, parse_idx)
+			bitstr, numstr, add_idx = decode(bitstr, parse_idx)
+			numberstr.extend(numstr)
 			parse_idx = add_idx
-			print("parse_idx", parse_idx)
 		return bitstr, numberstr, add_idx
 	elif(lentype_id == "1"):
-		print(bitstr)
 		shiftby = 11
 		num_of_subs_contained = bitstr[:shiftby]
 		num_of_subs_contained = int(num_of_subs_contained, 2)
 		bitstr = bitstr[shiftby:]
-		print("NUM OF SUBS CONTAINED", num_of_subs_contained)
+		# print("NUM OF SUBS CONTAINED", num_of_subs_contained)
 		for i in range(0, num_of_subs_contained):
-			# print("bitstr, i ", bitstr, i)
-			bitstr, _, parse_idx = decode(bitstr, parse_idx)
-		print("returning", bitstr)
-		return bitstr, 0, parse_idx
+			bitstr, numstr, parse_idx = decode(bitstr, parse_idx)
+			numberstr.extend(numstr)
+		return bitstr, numberstr, parse_idx
 
-def literal_value(bitstr):
-	# print("lit value bitstr", bitstr)
-	# print(type(bitstr))
+def literal_value(bitstr, numberstr):
 	startbit = 1
 	add_idx = 0
-	# print("startbit", startbit)
-	numberstr = ""
+	numstr = ""
 	while(startbit != "0"):
-		numberstr += bitstr[1:5]
+		numstr += bitstr[1:5]
 		startbit = bitstr[0]
 		bitstr = bitstr[5:]
-		# print(bitstr, startbit, numberstr)
 		add_idx+=5
-	# print(numberstr)
-	numberstr = int(numberstr, 2)
+	numberstr = [int(numstr, 2)]
 	print("LITERAL VALUE", numberstr)
-	# print("bitstr", bitstr)
+	print(bitstr, numberstr, add_idx)
 	return bitstr, numberstr, add_idx
 
 
 if __name__ == '__main__':
-	for ar in arr[:1]:
+	for ar in arr[:8]:
 		print(ar)
 		bitstr = ""
 		for ch in ar:

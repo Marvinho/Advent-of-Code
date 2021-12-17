@@ -1,10 +1,11 @@
+import statistics
 import math
-with open("day07.txt") as f:
+with open("testday07.txt") as f:
 	for line in f:
 		h_positions = line.strip().split(",")
 		h_positions = [int(x) for x in h_positions]
 print(h_positions)
-
+print(statistics.median(h_positions))
 def align_horizontally(h_positions):
 	h_pos_dict = {key: 0 for key in h_positions}
 	for pos in h_positions:
