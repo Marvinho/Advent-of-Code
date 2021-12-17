@@ -12,7 +12,7 @@ print(ts)
 def get_xtry(ts):
 	xpos, ypos = 0, 0
 	xtry = []
-	for i in range(31)[::-1]:
+	for i in range(ts[0][1]+1)[::-1]:
 		j = i
 		xpos = 0
 		while(j >= 0):
@@ -32,7 +32,7 @@ def find_target(ts):
 	print(xtrys)
 	maxypos_list = []
 	for xtry in xtrys:
-		for ytry in range(1000):
+		for ytry in range(-157,1500):
 			xpos, ypos = 0, 0
 			maxypos = 0
 			xvelo, yvelo = xtry, ytry
@@ -47,11 +47,14 @@ def find_target(ts):
 				yvelo -= 1
 				if(maxypos < ypos):
 					maxypos = ypos
-				if(xpos <= ts[0][1] and xpos >=ts[0][0] and ypos <= ts[1][1] and ypos >=ts[1][0]):
+				if(xpos <= ts[0][1] and xpos >=ts[0][0] 
+					and ypos <= ts[1][1] and ypos >=ts[1][0]):
 					print("result", xtry, ytry, xpos, ypos, maxypos)
 					maxypos_list.append(maxypos)
+					break
 					# break
 	print(maxypos_list)
 	print(max(maxypos_list))
+	print(len(maxypos_list))
 find_target(ts)
 
