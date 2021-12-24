@@ -1,5 +1,5 @@
 import math
-with open("testday18-0.txt") as f: 
+with open("day18.txt") as f: 
 	numbers = []
 	for line in f:
 		line = line.strip()
@@ -16,13 +16,14 @@ for number in numbers:
 	numbers_list.append(new_numbers)
 print(numbers_list)
 def add(number1, number2):
-	number1.append(",")
-	number1.extend(number2)
-	number1.append("]")
-	number1.insert(0, "[")
+	new = number1.copy()
+	new.append(",")
+	new.extend(number2)
+	new.append("]")
+	new.insert(0, "[")
 	# number_list = list(number_str)
-	print(number1)
-	return number1
+	print(new)
+	return new
 
 
 def reduce(number_list):
@@ -105,18 +106,15 @@ def magnitude(number_list):
 def part2(numbers_list):
 	asdf = numbers_list.copy()
 	lst = []
-	for i in asdf[0:10]:
-		for j in asdf[0:10]:
-			print(i)
-			print()
-			print(j)
-			if(i==j):
-				continue
-			nlist = add(i, j)
-			nlist = reduce(nlist)
-			nlist = magnitude(nlist)
-			lst.extend(nlist)
-	print(lst)
+	for i, x in enumerate(asdf):
+		for j, y in enumerate(asdf):
+			print(i, j)
+			if(i!=j):
+				nlist = add(x, y)
+				nlist = reduce(nlist)
+				nlist = magnitude(nlist)
+				lst.extend(nlist)
+	print(max(lst))
 if __name__ == '__main__':
 	part2(numbers_list)
 
